@@ -699,14 +699,12 @@ function sleep(time) {
 $ultimateRecord.on('click', function () {
     if (audioRecorder.isRecording()) {
         stopRecording(true);
+        getVideo().pause();
     } else {
         startRecording();
+        getVideo().play();
+        getVideo().muted=true;
     }
-    getVideo().play();
-    while (media_events["playing"]) {
-        sleep(1000).then(() => { });
-    }
-    stopRecording(false);
 });
 
 
