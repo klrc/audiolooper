@@ -704,7 +704,7 @@ $ultimateRecord.on('click', function () {
         startRecording();
         getVideo().play();
         getVideo().muted = true;
-        var recDiv = document.getElementsId("recording-list");
+        var recDiv = document.getElementsById("recording-list");
         var outDiv = recDiv.getElementsByTagName("audio");
         for (i = 0; i < outDiv.length; i++) {
             alert(outDiv[i].id);
