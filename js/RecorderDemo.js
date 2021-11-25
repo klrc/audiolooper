@@ -691,6 +691,11 @@ audioRecorder.onError = function (recorder, message) {
 };
 
 
+function sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+
 $ultimateRecord.on('click', function () {
     if (audioRecorder.isRecording()) {
         stopRecording(true);
@@ -698,20 +703,10 @@ $ultimateRecord.on('click', function () {
         startRecording();
     }
     getVideo().play();
+    while (media_events["playing"]) {
+        sleep(1000).then(() => { });
+    }
+    stopRecording(false);
 });
 
-
-// function sleep(time) {
-//     return new Promise((resolve) => setTimeout(resolve, time));
-// }
-
-
-// function ultimateStartVideo() {
-//     // getVideo().play();
-//     startRecording();
-//     // while (media_events["playing"]) {
-//     //     sleep(1000).then(() => { });
-//     // }
-//     // stopRecording(false);
-// }
 
