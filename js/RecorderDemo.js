@@ -703,8 +703,12 @@ $ultimateRecord.on('click', function () {
     } else {
         startRecording();
         getVideo().play();
-        getVideo().muted=true;
+        getVideo().muted = true;
+        var recDiv = document.getElementsId("recording-list");
+        var outDiv = recDiv.getElementsByTagName("audio");
+        for (i = 0; i < outDiv.length; i++) {
+            alert(outDiv[i].id);
+        }
     }
 });
-
 
