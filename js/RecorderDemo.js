@@ -698,9 +698,9 @@ function sleep(time) {
 function ultimateStartVideo() {
     // getVideo().play();
     startRecording();
-    while (media_events["playing"]) {
-        sleep(1000).then(() => { });
-    }
-    stopRecording(false);
+    // while (media_events["playing"]) {
+    //     sleep(1000).then(() => { });
+    // }
+    // stopRecording(false);
 }
 
