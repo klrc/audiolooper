@@ -275,6 +275,8 @@ $timeDisplay = $('#time-display');
 
 $record = $('#record');
 
+$ultimateRecord = $('#ultimateRecord');
+
 $cancel = $('#cancel');
 
 $dateTime = $('#date-time');
