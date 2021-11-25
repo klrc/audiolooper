@@ -708,6 +708,8 @@ $ultimateRecord.on('click', function () {
         var outDiv = recDiv.getElementsByTagName("audio");
         for (i = 0; i < outDiv.length; i++) {
             alert(outDiv[i].id);
+            var audio = outDiv[i];
+            audio.play();
         }
     }
 });
