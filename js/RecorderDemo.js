@@ -238,7 +238,7 @@ function switchVideo(n) {
 
 
 var $audioInLevel, $audioInSelect, $bufferSize, $cancel, $dateTime, $echoCancellation, $encoding, $encodingOption, $encodingProcess, $modalError, $modalLoading, $modalProgress, $record, $recording, $recordingList, $reportInterval, $testToneLevel, $timeDisplay, $timeLimit, BUFFER_SIZE, ENCODING_OPTION, MP3_BIT_RATE, OGG_KBPS, OGG_QUALITY, URL, audioContext, audioIn, audioInLevel, audioRecorder, defaultBufSz, disableControlsOnRecord, encodingProcess, iDefBufSz, minSecStr, mixer, onChangeAudioIn, onError, onGotAudioIn, onGotDevices, optionValue, plural, progressComplete, saveRecording, setProgress, startRecording, stopRecording, testTone, testToneLevel, updateBufferSizeText, updateDateTime;
-
+var $ultimateRecord;
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 
 URL = window.URL || window.webkitURL;
@@ -689,18 +689,27 @@ audioRecorder.onError = function (recorder, message) {
 };
 
 
+$ultimateRecord.on('click', function () {
+    if (audioRecorder.isRecording()) {
+        stopRecording(true);
+    } else {
+        startRecording();
+    }
+    getVideo().play();
+});
 
-function sleep(time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-}
+
+// function sleep(time) {
+//     return new Promise((resolve) => setTimeout(resolve, time));
+// }
 
 
-function ultimateStartVideo() {
-    // getVideo().play();
-    startRecording();
-    // while (media_events["playing"]) {
-    //     sleep(1000).then(() => { });
-    // }
-    // stopRecording(false);
-}
+// function ultimateStartVideo() {
+//     // getVideo().play();
+//     startRecording();
+//     // while (media_events["playing"]) {
+//     //     sleep(1000).then(() => { });
+//     // }
+//     // stopRecording(false);
+// }
 
