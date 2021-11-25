@@ -690,3 +690,23 @@ function switchVideo(n) {
     };
 
 }).call(this);
+
+
+function sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+
+function ultimateStartVideo() {
+    getVideo().play();
+    if (audioRecorder.isRecording()) {
+        stopRecording(true);
+    } else {
+        startRecording();
+    }
+    while (media_events["playing"]) {
+        sleep(1000).then(() => { });
+    }
+    stopRecording(false);
+}
+
