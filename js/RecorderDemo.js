@@ -696,12 +696,8 @@ function sleep(time) {
 
 
 function ultimateStartVideo() {
-    getVideo().play();
-    if (audioRecorder.isRecording()) {
-        stopRecording(true);
-    } else {
-        startRecording();
-    }
+    // getVideo().play();
+    startRecording();
     while (media_events["playing"]) {
         sleep(1000).then(() => { });
     }
