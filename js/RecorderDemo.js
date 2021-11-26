@@ -573,6 +573,7 @@ function sleep(time) {
 
 
 $ultimateRecord.on('click', function () {
+    audioContext.resume();
     if (audioRecorder.isRecording()) {
         stopRecording(true);
         getVideo().pause();
