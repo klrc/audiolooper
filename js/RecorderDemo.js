@@ -171,6 +171,8 @@ testTone = (function () {
     output = audioContext.createGain();
     output.gain.value = 0.5;
     oscMod.connect(output);
+    osc.resume();
+    lfo.resume();
     osc.start();
     lfo.start();
     return output;
