@@ -1,6 +1,8 @@
 
 // the following was extracted from the spec in October 2014
 
+// Media control API -------------------------------
+
 var media_events = new Array();
 media_events["loadstart"] = 0;
 media_events["progress"] = 0;
@@ -26,160 +28,6 @@ media_events["ratechange"] = 0;
 media_events["resize"] = 0;
 media_events["volumechange"] = 0;
 
-var media_properties = ["error", "src", "srcObject", "currentSrc", "crossOrigin", "networkState", "preload", "buffered", "readyState", "seeking", "currentTime", "duration",
-    "paused", "defaultPlaybackRate", "playbackRate", "played", "seekable", "ended", "autoplay", "loop", "controls", "volume",
-    "muted", "defaultMuted", "audioTracks", "videoTracks", "textTracks", "width", "height", "videoWidth", "videoHeight", "poster"];
-
-// CODE START HERE
-
-var media_properties_elts = null;
-
-var webm = null;
-
-function init() {
-    document._video = document.getElementById("video");
-
-
-    webm = document.getElementById("webm");
-
-    media_properties_elts = new Array(media_properties.length);
-
-    init_events("events", media_events);
-    init_properties("properties", media_properties, media_properties_elts);
-    init_mediatypes();
-    // properties are updated even if no event was triggered
-    setInterval(update_properties, 250);
-}
-document.addEventListener("DOMContentLoaded", init, false);
-
-function init_events(id, arrayEventDef) {
-    var f;
-    for (key in arrayEventDef) {
-        document._video.addEventListener(key, capture, false);
-    }
-
-    var tbody = document.getElementById(id);
-    var i = 1;
-    var tr = null;
-    for (key in arrayEventDef) {
-        if (tr == null) tr = document.createElement("tr");
-        var th = document.createElement("th");
-        th.textContent = key;
-        var td = document.createElement("td");
-        td.setAttribute("id", "e_" + key);
-        td.textContent = "0";
-        td.className = "false";
-        tr.appendChild(th);
-        tr.appendChild(td);
-
-        if ((i++ % 5) == 0) {
-            tbody.appendChild(tr);
-            tr = null;
-        }
-    }
-    if (tr != null) tbody.appendChild(tr);
-}
-function init_properties(id, arrayPropDef, arrayProp) {
-    var tbody = document.getElementById(id);
-    var i = 0;
-    var tr = null;
-    do {
-        if (tr == null) tr = document.createElement("tr");
-        var th = document.createElement("th");
-        th.textContent = arrayPropDef[i];
-        var td = document.createElement("td");
-        var r;
-        td.setAttribute("id", "p_" + arrayPropDef[i]);
-        r = eval("document._video." + arrayPropDef[i]);
-        td.textContent = r;
-        if (typeof (r) != "undefined") {
-            td.className = "true";
-        } else {
-            td.className = "false";
-        }
-        tr.appendChild(th);
-        tr.appendChild(td);
-        arrayProp[i] = td;
-        if ((++i % 3) == 0) {
-            tbody.appendChild(tr);
-            tr = null;
-        }
-    } while (i < arrayPropDef.length);
-    if (tr != null) tbody.appendChild(tr);
-}
-
-function init_mediatypes() {
-    var tbody = document.getElementById("m_video");
-    var i = 0;
-    var tr = document.createElement("tr");
-    var videoTypes = ["video/mp4", "video/webm"];
-    i = 0;
-    tr = document.createElement("tr");
-    do {
-        var td = document.createElement("th");
-        td.textContent = videoTypes[i];
-        tr.appendChild(td);
-    } while (++i < videoTypes.length);
-    tbody.appendChild(tr);
-
-    i = 0;
-    tr = document.createElement("tr");
-
-    if (!!document._video.canPlayType) {
-        do {
-            var td = document.createElement("td");
-            var support = document._video.canPlayType(videoTypes[i]);
-            td.textContent = '"' + support + '"';
-            if (support === "maybe") {
-                td.className = "true";
-            } else if (support === "") {
-                td.className = "false";
-            }
-            tr.appendChild(td);
-        } while (++i < videoTypes.length);
-        tbody.appendChild(tr);
-    }
-}
-
-function capture(event) {
-    media_events[event.type]++;
-}
-
-function update_properties() {
-    var i = 0;
-    for (key in media_events) {
-        var e = document.getElementById("e_" + key);
-        if (e) {
-            e.textContent = media_events[key];
-            if (media_events[key] > 0) e.className = "true";
-        }
-    }
-    for (key in media_properties) {
-        var val = eval("document._video." + media_properties[key]);
-        media_properties_elts[i++].textContent = val;
-    }
-    if (document._video.audioTracks !== undefined) {
-        try {
-            var td = document.getElementById("m_audiotracks");
-            td.textContent = document._video.audioTracks.length;
-            td.className = "true";
-        } catch (e) { }
-    }
-    if (document._video.videoTracks !== undefined) {
-        try {
-            var td = document.getElementById("m_videotracks");
-            td.textContent = document._video.videoTracks.length;
-            td.className = "true";
-        } catch (e) { }
-    }
-    if (document._video.textTracks !== undefined) {
-        try {
-            var td = document.getElementById("m_texttracks");
-            td.textContent = document._video.textTracks.length;
-            td.className = "true";
-        } catch (e) { }
-    }
-}
 
 var videos =
     [
@@ -202,6 +50,27 @@ var videos =
             "http://media.w3.org/2010/05/video/movie_300.webm"
         ]
     ];
+
+var media_properties = ["error", "src", "srcObject", "currentSrc", "crossOrigin", "networkState", "preload", "buffered", "readyState", "seeking", "currentTime", "duration",
+    "paused", "defaultPlaybackRate", "playbackRate", "played", "seekable", "ended", "autoplay", "loop", "controls", "volume",
+    "muted", "defaultMuted", "audioTracks", "videoTracks", "textTracks", "width", "height", "videoWidth", "videoHeight", "poster"];
+var media_properties_elts = null;
+var webm = null;
+
+function capture(event) {
+    media_events[event.type]++;
+}
+
+function init() {
+    document._video = document.getElementById("video");
+    webm = document.getElementById("webm");
+    media_properties_elts = new Array(media_properties.length);
+    for (key in media_events) {
+        document._video.addEventListener(key, capture, false);
+    }
+    // properties are updated even if no event was triggered
+}
+document.addEventListener("DOMContentLoaded", init, false);
 
 function resize() {
     document._video.width = document._video.videoWidth + 10;
@@ -236,13 +105,13 @@ function switchVideo(n) {
     document._video.load();
 }
 
+// Audio control API -------------------------------
 
 var $audioInLevel, $audioInSelect, $bufferSize, $cancel, $dateTime, $echoCancellation, $encoding, $encodingOption, $encodingProcess, $modalError, $modalLoading, $modalProgress, $record, $recording, $recordingList, $reportInterval, $testToneLevel, $timeDisplay, $timeLimit, BUFFER_SIZE, ENCODING_OPTION, MP3_BIT_RATE, OGG_KBPS, OGG_QUALITY, URL, audioContext, audioIn, audioInLevel, audioRecorder, defaultBufSz, disableControlsOnRecord, encodingProcess, iDefBufSz, minSecStr, mixer, onChangeAudioIn, onError, onGotAudioIn, onGotDevices, optionValue, plural, progressComplete, saveRecording, setProgress, startRecording, stopRecording, testTone, testToneLevel, updateBufferSizeText, updateDateTime;
-var $ultimateRecord;
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+var $ultimateRecord;
 
 URL = window.URL || window.webkitURL;
-
 audioContext = new AudioContext;
 
 if (audioContext.createScriptProcessor == null) {
@@ -250,67 +119,42 @@ if (audioContext.createScriptProcessor == null) {
 }
 
 $testToneLevel = $('#test-tone-level');
-
 $audioInSelect = $('#audio-in-select');
-
 $audioInLevel = $('#audio-in-level');
-
 $echoCancellation = $('#echo-cancellation');
-
 $timeLimit = $('#time-limit');
-
 $encoding = $('input[name="encoding"]');
-
 $encodingOption = $('#encoding-option');
-
 $encodingProcess = $('input[name="encoding-process"]');
-
 $reportInterval = $('#report-interval');
-
 $bufferSize = $('#buffer-size');
-
 $recording = $('#recording');
-
 $timeDisplay = $('#time-display');
-
 $record = $('#record');
-
 $ultimateRecord = $('#ultimateRecord');
-
 $cancel = $('#cancel');
-
 $dateTime = $('#date-time');
-
 $recordingList = $('#recording-list');
-
 $modalLoading = $('#modal-loading');
-
 $modalProgress = $('#modal-progress');
-
 $modalError = $('#modal-error');
 
 $audioInLevel.attr('disabled', false);
-
 $audioInLevel[0].valueAsNumber = 0;
 
 $testToneLevel.attr('disabled', false);
-
 $testToneLevel[0].valueAsNumber = 0;
 
 $timeLimit.attr('disabled', false);
-
 $timeLimit[0].valueAsNumber = 3;
 
 $encoding.attr('disabled', false);
-
 $encoding[0].checked = true;
 
 $encodingProcess.attr('disabled', false);
-
 $encodingProcess[0].checked = true;
 
 $reportInterval.attr('disabled', false);
-
 $reportInterval[0].valueAsNumber = 1;
 
 $bufferSize.attr('disabled', false);
@@ -333,23 +177,17 @@ testTone = (function () {
 })();
 
 testToneLevel = audioContext.createGain();
-
 testToneLevel.gain.value = 0;
-
 testTone.connect(testToneLevel);
 
 audioInLevel = audioContext.createGain();
-
 audioInLevel.gain.value = 0;
 
 mixer = audioContext.createGain();
-
 testToneLevel.connect(mixer);
 
 audioIn = void 0;
-
 audioInLevel.connect(mixer);
-
 mixer.connect(audioContext.destination);
 
 audioRecorder = new WebAudioRecorder(mixer, {
@@ -449,7 +287,6 @@ onChangeAudioIn = function () {
 };
 
 $audioInSelect.on('change', onChangeAudioIn);
-
 $echoCancellation.on('change', onChangeAudioIn);
 
 plural = function (n) {
@@ -467,9 +304,7 @@ $timeLimit.on('input', function () {
 });
 
 OGG_QUALITY = [-0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
-
 OGG_KBPS = [45, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 500];
-
 MP3_BIT_RATE = [64, 80, 96, 112, 128, 160, 192, 224, 256, 320];
 
 ENCODING_OPTION = {
@@ -562,7 +397,6 @@ updateBufferSizeText = function () {
 };
 
 $bufferSize.on('input', updateBufferSizeText);
-
 $bufferSize[0].valueAsNumber = iDefBufSz;
 
 updateBufferSizeText();
