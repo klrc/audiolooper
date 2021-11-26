@@ -576,6 +576,12 @@ $ultimateRecord.on('click', function () {
     if (audioRecorder.isRecording()) {
         stopRecording(true);
         getVideo().pause();
+        var recDiv = document.getElementById("recording-list");
+        var outDiv = recDiv.getElementsByTagName("audio");
+        for (i = 0; i < outDiv.length; i++) {
+            var audio = outDiv[i];
+            audio.pause();
+        }
     } else {
         startRecording();
         getVideo().currentTime = 0;
@@ -585,7 +591,6 @@ $ultimateRecord.on('click', function () {
         var outDiv = recDiv.getElementsByTagName("audio");
         for (i = 0; i < outDiv.length; i++) {
             var audio = outDiv[i];
-            audio.pause();
             audio.currentTime = 0;
             audio.play();
         }
